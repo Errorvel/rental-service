@@ -5,24 +5,22 @@ import './models/user.js';
 import './models/offer.js';
 import './models/review.js';
 import cors from 'cors';
-import router  from './routes/index.js';
+import { router } from './routes/index.js';
+import errorMiddleware from './middleware/ErrorHandlingMiddleware.js';
+import { fileURLToPath } from 'url';
+import path from 'path';
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 5000;
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/static', express.static(path.resolve(__dirname, 'static')));
 app.use('/', router);
 app.use(errorMiddleware);
-
-app.get('/', (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'Ура! Все заработало!',
-    docs: process.env.API_DOCS_URL || null
-  });
-});
 
 const start = async () => {
     try {

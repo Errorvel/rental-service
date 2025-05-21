@@ -1,6 +1,6 @@
 import { Router } from "express";
-import upload from "../middleware/upload";
-import { registration } from "../controllers/userControllers";
+import upload from "../middleware/upload.js";
+import { registration } from "../controllers/userController.js";
 
 const router = new Router();
 
