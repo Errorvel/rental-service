@@ -99,3 +99,27 @@ export async function getFullOffer(req, res, next) {
     return next(ApiError.internal('Ошибка получения полного оффера'));
   }
 }
+export const getFavoriteOffers = async (req, res, next) => {
+  try {
+    const favorites = await Offer.findAll({ where: { isFavorite: true } });
+    res.json(favorites);
+  } catch (error) {
+    next(error);
+  }
+};
+export const toggleFavorite = async (req, res, next) => {
+  const { offerId, status } = req.params;
+  try {
+    const offer = await Offer.findByPk(offerId);
+    if (!offer) {
+      return next(ApiError.notFound('Предложение не найдено'));
+    }
+
+    offer.isFavorite = status === '1';
+    await offer.save();
+
+    res.json(offer);
+  } catch (error) {
+    next(ApiError.internal('Ошибка при обновлении статуса избранного'));
+  }
+};
