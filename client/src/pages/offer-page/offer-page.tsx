@@ -1,27 +1,35 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
+import { FullOffer } from '../../types/offer';
+import { Logo } from '../../components/logo/logo';
+import { NotFoundPage } from '../not-found-page/not-found-page';
+import { CommentsForm } from '../../components/coments-form/comments-form';
+export type OfferPageProps = {
+  offers: FullOffer[];
+};
 
-function OfferPage() {
+export function OfferPage({ offers }: { offers: FullOffer[] }) {
+  const { id } = useParams(); 
+  
+  const offer = offers.find((o) => o.id === id);
+  
+  if (!offer) {
+    return <div>Offer not found</div>;
+  }
+
   return (
     <div className="page">
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <a className="header__logo-link" href="/">
-                <img
-                  className="header__logo"
-                  src="/img/logo.svg"
-                  alt="Rent service logo"
-                  width="81"
-                  height="41"
-                />
-              </a>
+              <Logo />
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
                   <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper" />
+                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                     <span className="header__user-name user__name">Myemail@gmail.com</span>
                     <span className="header__favorite-count">3</span>
                   </a>
@@ -41,140 +49,118 @@ function OfferPage() {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {[
-                'room.jpg',
-                'apartment-01.jpg',
-                'apartment-02.jpg',
-                'apartment-03.jpg',
-                'studio-01.jpg',
-                'apartment-01.jpg',
-              ].map((img, idx) => (
-                <div className="offer__image-wrapper" key={idx}>
+              {offer.images.map((item) => (
+                <div key={item} className="offer__image-wrapper">
                   <img
                     className="offer__image"
-                    src={`/img/${img}`}
-                    alt="Photo studio"
+                    src={`/img/${item}`}
+                    alt={`Photo of ${offer.title}`}
+                    loading="lazy"
                   />
                 </div>
               ))}
             </div>
           </div>
-
           <div className="offer__container container">
             <div className="offer__wrapper">
-              <div className="offer__mark">
-                <span>Premium</span>
-              </div>
+              {offer.isPremium && (
+                <div className="offer__mark">
+                  <span>Premium</span>
+                </div>
+              )}
               <div className="offer__name-wrapper">
-                <h1 className="offer__name">
-                  Beautiful &amp; luxurious studio at great location
-                </h1>
-                <button className="offer__bookmark-button button" type="button">
+                <h1 className="offer__name">{offer.title}</h1>
+                <button 
+                  className={`offer__bookmark-button button ${offer.isFavorite ? 'offer__bookmark-button--active' : ''}`} 
+                  type="button"
+                >
                   <svg className="offer__bookmark-icon" width="31" height="33">
-                    <use href="#icon-bookmark" />
+                    <use href="#icon-bookmark"></use>
                   </svg>
-                  <span className="visually-hidden">To bookmarks</span>
+                  <span className="visually-hidden">
+                    {offer.isFavorite ? 'In bookmarks' : 'To bookmarks'}
+                  </span>
                 </button>
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{ width: '80%' }} />
+                  <span style={{ width: `${(offer.rating / 5) * 100}%` }}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
-                <span className="offer__rating-value rating__value">4.8</span>
+                <span className="offer__rating-value rating__value">{offer.rating}</span>
               </div>
               <ul className="offer__features">
-                <li className="offer__feature offer__feature--entire">Apartment</li>
-                <li className="offer__feature offer__feature--bedrooms">3 Bedrooms</li>
-                <li className="offer__feature offer__feature--adults">Max 4 adults</li>
+                <li className="offer__feature offer__feature--entire">
+                  {offer.type.charAt(0).toUpperCase() + offer.type.slice(1)}
+                </li>
+                <li className="offer__feature offer__feature--bedrooms">
+                  {offer.bedrooms} {offer.bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}
+                </li>
+                <li className="offer__feature offer__feature--adults">
+                  Max {offer.maxAdults} {offer.maxAdults === 1 ? 'adult' : 'adults'}
+                </li>
               </ul>
               <div className="offer__price">
-                <b className="offer__price-value">€120</b>
+                <b className="offer__price-value">€{offer.price}</b>
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
               <div className="offer__inside">
-                <h2 className="offer__inside-title">What&apos;s inside</h2>
+                <h2 className="offer__inside-title">What's inside</h2>
                 <ul className="offer__inside-list">
-                  {[
-                    'Wi-Fi',
-                    'Washing machine',
-                    'Towels',
-                    'Heating',
-                    'Coffee machine',
-                    'Baby seat',
-                    'Kitchen',
-                    'Dishwasher',
-                    'Cabel TV',
-                    'Fridge',
-                  ].map((item) => (
-                    <li className="offer__inside-item" key={item}>{item}</li>
+                  {offer.goods.map((g) => (
+                    <li key={g} className="offer__inside-item">
+                      {g}
+                    </li>
                   ))}
                 </ul>
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
-                  <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
+                  <div
+                    className={`offer__avatar-wrapper user__avatar-wrapper${
+                      offer.host.isPro ? ' offer__avatar-wrapper--pro' : ''
+                    }`}
+                  >
                     <img
                       className="offer__avatar user__avatar"
-                      src="/img/avatar-angelina.jpg"
+                      src={`img/${offer.host.avatarUrl}`}
                       width="74"
                       height="74"
-                      alt="Host avatar"
+                      alt={offer.host.name}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/img/default-avatar.jpg';
+                      }}
                     />
                   </div>
-                  <span className="offer__user-name">Angelina</span>
-                  <span className="offer__user-status">Pro</span>
+                  <span className="offer__user-name">{offer.host.name}</span>
+                  {offer.host.isPro && (
+                    <span className="offer__user-status">Pro</span>
+                  )}
                 </div>
                 <div className="offer__description">
-                  <p className="offer__text">
-                    A quiet cozy and picturesque that hides behind a river by the unique lightness of Amsterdam. The building is green and from 18th century.
-                  </p>
-                  <p className="offer__text">
-                    An independent House, strategically located between Rembrand Square and National Opera, but where the bustle of the city comes to rest in this alley flowery and colorful.
-                  </p>
+                  <p className="offer__text">{offer.description}</p>
                 </div>
+              </div>
+              <div className="offer__location-info">
+                <p className="offer__city">
+                  City: {offer.city.name}
+                </p>
+                <p className="offer__coords">
+                  Coordinates: {offer.location.latitude}, {offer.location.longitude}
+                </p>
               </div>
               <section className="offer__reviews reviews">
                 <h2 className="reviews__title">
-                  Reviews &middot; <span className="reviews__amount">1</span>
+                  Reviews&nbsp;·&nbsp;<span className="reviews__amount">0</span>
                 </h2>
-                <ul className="reviews__list">
-                  <li className="reviews__item">
-                    <div className="reviews__user user">
-                      <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                        <img
-                          className="reviews__avatar user__avatar"
-                          src="/img/avatar-max.jpg"
-                          width="54"
-                          height="54"
-                          alt="Reviews avatar"
-                        />
-                      </div>
-                      <span className="reviews__user-name">Max</span>
-                    </div>
-                    <div className="reviews__info">
-                      <div className="reviews__rating rating">
-                        <div className="reviews__stars rating__stars">
-                          <span style={{ width: '80%' }} />
-                          <span className="visually-hidden">Rating</span>
-                        </div>
-                      </div>
-                      <p className="reviews__text">
-                        A quiet cozy and picturesque that hides behind a river by the unique lightness of Amsterdam. The building is green and from 18th century.
-                      </p>
-                      <time className="reviews__time" dateTime="2019-04-24">April 2019</time>
-                    </div>
-                  </li>
-                </ul>
+                <CommentsForm />
               </section>
             </div>
           </div>
-          <section className="offer__map map" />
+          <section className="offer__map map"></section>
         </section>
       </main>
     </div>
   );
 }
-
-export { OfferPage };
