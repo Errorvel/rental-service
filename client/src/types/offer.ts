@@ -1,17 +1,22 @@
-type OfferLocation = {
+// src/types/offer.ts
+
+export type OfferLocation = {
   latitude: number;
   longitude: number;
   zoom: number;
 };
-type CityOffer = {
+
+export type CityOffer = {
   name: string;
   location: OfferLocation;
 };
-type Host0ffer = {
+
+export type HostOffer = {
   name: string;
   avatarUrl: string;
   isPro: boolean;
-}
+};
+
 export type FullOffer = {
   id: string;
   title: string;
@@ -25,10 +30,12 @@ export type FullOffer = {
   description: string;
   bedrooms: number;
   goods: string[];
-  host: Host0ffer;
-  images: string[];
+  host: HostOffer;
+  images: string[];       // Здесь хранится массив фотографий
   maxAdults: number;
 };
+
+// Компонент CitiesCardList ожидает именно такой набор полей:
 export type OffersList = {
   id: string;
   title: string;
@@ -50,5 +57,5 @@ export type OffersList = {
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;
-  previewImage: string;
+  previewImage: string;   // <-- сюда мы должны взять images[0] из FullOffer
 };

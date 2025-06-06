@@ -1,25 +1,48 @@
-import { CitiesCardList } from "../../components/cities-card-list/cities-card-list";
-import { Logo } from "../../components/logo/logo";
-import { JSX } from "react";
-import { OffersList } from "../../types/offer";
-type AppMainPageProps = {
+import { JSX } from 'react';
+import { Link } from 'react-router-dom';
+import { CitiesCardList } from '../../components/cities-card-list/cities-card-list';
+import { Logo } from '../../components/logo/logo';
+import { offersList } from '../../mocks/offer-list';
+import { OffersList } from '../../types/offer';
+import { Helmet } from 'react-helmet-async';
+import { Map } from '../../components/map/map';
+
+type MainPageProps = {
   rentalOffersCount: number;
   offersList: OffersList[];
 };
 
-export function MainPage({ rentalOffersCount, offersList }: AppMainPageProps): JSX.Element {
+export function MainPage({
+  rentalOffersCount,
+  offersList
+}: MainPageProps): JSX.Element {
+  const amsterdamOffers = offersList.filter((o) => o.city.name === 'Amsterdam');
+
+  const mapCenter: [number, number] = [52.38333, 4.9];
+
+  const points = amsterdamOffers.map((offer) => ({
+    latitude: offer.location.latitude,
+    longitude: offer.location.longitude,
+    id: offer.id,
+    title: offer.title,
+    price: offer.price,
+    type: offer.type
+  }));
+
   return (
     <div className="page page--gray page--main">
+      <Helmet><title>Six cities</title></Helmet>
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
-            <div className="header__left"><Logo /></div>
+            <div className="header__left">
+              <Logo/>
+            </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
                   <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
+                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                     <span className="header__user-name user__name">Myemail@gmail.com</span>
                     <span className="header__favorite-count">3</span>
                   </a>
@@ -77,13 +100,15 @@ export function MainPage({ rentalOffersCount, offersList }: AppMainPageProps): J
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{rentalOffersCount} places to stay in Amsterdam</b>
+              <b className="places__found">
+                {rentalOffersCount} places to stay in Amsterdam
+              </b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
                   Popular
                   <svg className="places__sorting-arrow" width="7" height="4">
-                    <use href="#icon-arrow-select"></use>
+                    <use xlinkHref="#icon-arrow-select"></use>
                   </svg>
                 </span>
                 <ul className="places__options places__options--custom places__options--opened">
@@ -93,9 +118,13 @@ export function MainPage({ rentalOffersCount, offersList }: AppMainPageProps): J
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <CitiesCardList offersList={offersList} />
+              <CitiesCardList offersList={amsterdamOffers} />
             </section>
-            <div className="cities__right-section"><section className="cities__map map" /></div>
+            <div className="cities__right-section">
+              <section className="cities__map map" style={{ height: '100%', width: '100%' }}>
+                <Map points={points} center={mapCenter} zoom={12} />
+              </section>
+            </div>
           </div>
         </div>
       </main>

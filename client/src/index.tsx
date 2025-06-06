@@ -4,6 +4,7 @@ import { Setting } from './setting'
 import { offers } from './mocks/offer'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import 'leaflet/dist/leaflet.css';
 import {App} from './components/app/app';
 import { offersList } from './mocks/offer-list'
 import { AuthorizationStatus } from './const';

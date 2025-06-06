@@ -1,4 +1,6 @@
-import { FullOffer } from "../types/offer";
+// src/mocks/offers.ts
+
+import { FullOffer } from '../types/offer';
 
 export const offers: FullOffer[] = [
   {
