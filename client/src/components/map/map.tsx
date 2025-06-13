@@ -1,26 +1,29 @@
-// src/components/map/map.tsx
+import React, { useEffect, useRef, useMemo } from 'react';
 import L from 'leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { useEffect, useMemo, useState } from 'react';
 
-// Фикс для иконок
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+const defaultIcon = L.icon({
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28],
-  shadowSize: [41, 41],
+  shadowSize: [41, 41]
+});
+
+const activeIcon = L.icon({
+  iconUrl: 'img/pin-active.svg',
+  iconSize: [30, 45],
+  iconAnchor: [15, 45],
+  popupAnchor: [1, -34]
 });
 
 type Point = {
   latitude: number;
   longitude: number;
-  id?: string;
+  id: string;
   title?: string;
   price?: number;
   type?: string;
@@ -29,27 +32,37 @@ type Point = {
 type MapProps = {
   points: Point[];
   center: [number, number];
-  zoom?: number;
+  zoom: number;
   className?: string;
+  selectedPointId: string | null;
 };
 
-const DEFAULT_ZOOM = 12;
+function FitBoundsUpdater({ points }: { points: Point[] }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (points.length === 0) {
+      return;
+    }
+    const latLngs = points.map(p => [p.latitude, p.longitude] as [number, number]);
+    const bounds = L.latLngBounds(latLngs);
+    map.fitBounds(bounds.pad(0.3)); 
+  }, [points, map]);
+
+  return null;
+}
 
 export function Map({
   points,
   center,
-  zoom = DEFAULT_ZOOM,
+  zoom = 12,
   className = 'cities__map',
+  selectedPointId
 }: MapProps) {
-  const [isMapReady, setIsMapReady] = useState(false);
-
-  useEffect(() => {
-    setIsMapReady(true);
-  }, []);
-
-  if (!isMapReady) {
-    return <div className={className} style={{ height: '100%' }} />;
-  }
+  const filteredPoints = useMemo(
+    () => points.filter(p => p.latitude != null && p.longitude != null),
+    [points]
+  );
 
   return (
     <MapContainer
@@ -62,11 +75,14 @@ export function Map({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      
-      {points.map((point) => (
+
+      <FitBoundsUpdater points={filteredPoints} />
+
+      {filteredPoints.map((point) => (
         <Marker
-          key={point.id || `${point.latitude}-${point.longitude}`}
+          key={point.id}
           position={[point.latitude, point.longitude]}
+          icon={point.id === selectedPointId ? activeIcon : defaultIcon}
         >
           {point.title && (
             <Popup>

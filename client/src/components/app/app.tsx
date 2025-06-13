@@ -11,14 +11,12 @@ import { PrivateRoute } from '../private-route/private-route';
 import { FullOffer, OffersList } from '../../types/offer';
 
 type AppProps = {
-  rentalOffersCount: number;
   offersList: OffersList[];
   offers: FullOffer[];
   authorizationStatus: typeof AuthorizationStatus[keyof typeof AuthorizationStatus];
 };
 
 export function App({
-  rentalOffersCount,
   offersList,
   offers,
   authorizationStatus,
@@ -27,15 +25,9 @@ export function App({
     <HelmetProvider>
       <BrowserRouter>
         <Routes>
-          <Route
-            path={AppRoute.Main}
-            element={
-              <MainPage 
-                rentalOffersCount={rentalOffersCount}
-                offersList={offersList}
-              />
-            }
-          />
+        < Route path={AppRoute.Main} element={<MainPage />}
+/>
+
 
           <Route
             path={AppRoute.Login}
@@ -51,10 +43,10 @@ export function App({
             }
           />
 
-          <Route 
-            path={`${AppRoute.Offer}/:id`} 
-            element={<OfferPage offers={offers} />}
-          />
+         <Route
+  path={AppRoute.Offer}
+  element={<OfferPage offers={offers} />}
+/>
 
           <Route
             path="*"

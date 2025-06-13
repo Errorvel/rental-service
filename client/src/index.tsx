@@ -1,22 +1,29 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client';
-import { Setting } from './setting'
-import { offers } from './mocks/offer'
-import { createRoot } from 'react-dom/client'
-import './index.css'
+// src/index.tsx
+
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
+
+import './index.css';
 import 'leaflet/dist/leaflet.css';
-import {App} from './components/app/app';
-import { offersList } from './mocks/offer-list'
+
+import { App } from './components/app/app';
+import { store } from './store';
+
+import { offers } from './mocks/offer';
+import { offersList } from './mocks/offer-list';
 import { AuthorizationStatus } from './const';
+
 const root = createRoot(document.getElementById('root')!);
 
 root.render(
   <React.StrictMode>
-    <App
-      rentalOffersCount={Setting.RentalOffersCount}
-      offersList={offersList}
-      offers={offers}
-      authorizationStatus={AuthorizationStatus.Auth}
-    />
+    <Provider store={store}>
+      <App
+        offersList={offersList}
+        offers={offers}
+        authorizationStatus={AuthorizationStatus.Auth}
+      />
+    </Provider>
   </React.StrictMode>
 );

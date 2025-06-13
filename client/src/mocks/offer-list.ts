@@ -48,6 +48,29 @@ export const offersList: OffersList[] = [
     rating: 4.7
   },
   {
+    id: "e1f8a2b3-9cde-4a76-a123-ffeeddccbbaa",
+    title: "Дизайнерская студия в историческом здании",
+    type: "apartment",
+    price: 330, 
+    previewImage: "амс1.jpg", 
+    city: {
+      name: "Amsterdam",
+      location: {
+        latitude: 52.370216,
+        longitude: 4.895168,
+        zoom: 13
+      }
+    },
+    location: {
+      latitude: 52.372123,
+      longitude: 4.900987,
+      zoom: 16
+    },
+    isFavorite: true,
+    isPremium: false,
+    rating: 4.4
+  },
+  {
     id: "c3d9e6f2-5a78-4bcd-8e12-9876543210dc",
     title: "Современные студии у Европарламента",
     type: "house",
@@ -79,14 +102,14 @@ export const offersList: OffersList[] = [
     city: {
       name: "Cologne",
       location: {
-        latitude: 50.937531,
-        longitude: 6.960279,
+        latitude: 50.9375,
+        longitude: 6.9603,
         zoom: 13
       }
     },
     location: {
-      latitude: 50.940000,
-      longitude: 6.965000,
+      latitude: 50.9375,
+      longitude: 6.9603,
       zoom: 15
     },
     isFavorite: false,

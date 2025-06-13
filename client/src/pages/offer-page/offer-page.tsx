@@ -16,16 +16,11 @@ export type OfferPageProps = {
 
 export function OfferPage({ offers }: OfferPageProps) {
   const { id } = useParams<{ id: string }>();
-  
-  // Добавьте эти строки для отладки:
-  console.log('Current ID from URL:', id);
-  console.log('Available offer IDs:', offers.map(o => o.id));
-  
   const offer = offers.find((o) => o.id === id);
   
   if (!offer) {
-    console.log('Offer not found for ID:', id); // Добавьте и здесь
-    return <NotFoundPage />; // Лучше возвращать полноценную страницу 404
+    console.log('Offer not found for ID:', id); 
+    return <NotFoundPage />; 
   }
 
 
@@ -144,7 +139,7 @@ export function OfferPage({ offers }: OfferPageProps) {
                   {offer.bedrooms} Bedrooms
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max {offer.maxAdults} adults {/* Исправлено здесь */}
+                  Max {offer.maxAdults} adults {}
                 </li>
               </ul>
 
@@ -201,7 +196,13 @@ export function OfferPage({ offers }: OfferPageProps) {
               </section>
             </div>
             <section className="offer__map map" style={{ height: '300px', width: '100%' }}>
-              <Map points={mapPoints} center={mapCenter} zoom={13} />
+             <Map 
+  points={mapPoints} 
+  center={mapCenter} 
+  zoom={13}
+  selectedPointId={offer.id} 
+  className="offer__map"
+/>
             </section>
           </div>
 

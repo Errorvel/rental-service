@@ -97,6 +97,47 @@ export const offers: FullOffer[] = [
     maxAdults: 2
   },
   {
+    id: "e1f8a2b3-9cde-4a76-a123-ffeeddccbbaa",
+    title: "Дизайнерская студия в историческом здании",
+    description: "уникальную дизайнерскую студию, расположенную в самом сердце Амстердама в здании XVII века. Пространтсво сочетатет в себе исторический шарм Амстердама.",
+    type: "apartment",
+    price: 330,
+    images: [
+      'амс2.jpg',
+      'амс3.jpg',
+      'амс4.jpg',
+      'амс5.jpg'
+    ],
+    city: {
+      name: "Amsterdam",
+      location: {
+        latitude: 52.370216,
+        longitude: 4.895168,
+        zoom: 13
+      }
+    },
+    location: {
+      latitude: 52.372123,
+      longitude: 4.900987,
+      zoom: 16
+    },
+    goods: [
+      'Breakfast',
+      'Fridge',
+      'Towels',
+    ],
+    host: {
+      isPro: false,
+      name: 'Max',
+      avatarUrl: 'avatar-max.jpg'
+    },
+    isPremium: true,
+    isFavorite: false,
+    rating: 4.4,
+    bedrooms: 1,
+    maxAdults: 2
+  },
+  {
     id: "c3d9e6f2-5a78-4bcd-8e12-9876543210dc",
     title: "Современные студии у Европарламента",
     description: "Мини-бар, кухня-гостиная и выход в парк.",
